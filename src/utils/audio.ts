@@ -140,6 +140,29 @@ class SoundEffects {
     }
   }
 
+  // Industrial pneumatic release / tool clack
+  public playPneumatic() {
+    if (this.isMuted) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      const t = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(260, t);
+      osc.frequency.exponentialRampToValueAtTime(60, t + 0.22);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.22);
+    } catch {
+      // ignore
+    }
+  }
+
   // Retro arcade power-up / title screen start sound
   public playArcadeStart() {
     if (this.isMuted) return;

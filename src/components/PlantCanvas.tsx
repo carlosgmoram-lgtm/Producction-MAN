@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { PlantUnit, Character, UnitId } from '../types/game';
+import { PlantUnit, Character, UnitId, ProcessConfig, MachineDefinition, BottleneckTOCState } from '../types/game';
 import { 
   Truck, Cog, CheckCircle2, Wrench, Package, 
-  Send, TrendingUp, Headphones, Globe2, AlertCircle, ChevronRight, Zap
+  Send, TrendingUp, Headphones, Globe2, AlertCircle, ChevronRight, Zap, Factory, ShieldAlert, Cpu
 } from 'lucide-react';
 import { sound } from '../utils/audio';
 
@@ -13,6 +13,10 @@ interface PlantCanvasProps {
   isSimulating: boolean;
   onSelectUnit: (unit: PlantUnit) => void;
   onOpenCharacterDialogue: (character: Character) => void;
+  processConfig?: ProcessConfig;
+  machines?: MachineDefinition[];
+  bottleneckState?: BottleneckTOCState;
+  onOpenBottleneckModal?: () => void;
 }
 
 export const PlantCanvas: React.FC<PlantCanvasProps> = ({
@@ -21,7 +25,11 @@ export const PlantCanvas: React.FC<PlantCanvasProps> = ({
   bottleneckUnit,
   isSimulating,
   onSelectUnit,
-  onOpenCharacterDialogue
+  onOpenCharacterDialogue,
+  processConfig,
+  machines = [],
+  bottleneckState,
+  onOpenBottleneckModal
 }) => {
   // Animation ticks for conveyor movement, machine pistons, and forklifts
   const [animTick, setAnimTick] = useState<number>(0);
@@ -71,16 +79,21 @@ export const PlantCanvas: React.FC<PlantCanvasProps> = ({
       {/* Plant Canvas Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-[#222b37] gap-3">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-base sm:text-lg font-bold text-white tracking-tight font-sans">
-              Línea de Producción & Distribución SCADA
+              {processConfig ? processConfig.plantName : 'Línea de Producción & Distribución SCADA'}
             </h2>
             <span className="text-[11px] text-amber-400 font-mono bg-[#1c2430] px-2 py-0.5 rounded border border-amber-500/30">
-              SISTEMA EN VIVO
+              {processConfig ? processConfig.title : 'SISTEMA EN VIVO'}
             </span>
+            {processConfig && (
+              <span className="text-[10px] text-zinc-400 font-mono hidden md:inline px-2 py-0.5 bg-[#141b24] rounded border border-[#222e3d]">
+                Restricción: <strong className="text-amber-300">{processConfig.bottleneckStation}</strong>
+              </span>
+            )}
           </div>
           <p className="text-xs text-zinc-400 mt-0.5 font-mono">
-            Supervisión continua de la planta. Haz clic en cualquier estación para ajustar parámetros tácticos o dialogar con su jefatura.
+            {processConfig ? processConfig.tagline : 'Supervisión continua de la planta. Haz clic en cualquier estación para ajustar parámetros tácticos.'}
           </p>
         </div>
 
@@ -97,6 +110,57 @@ export const PlantCanvas: React.FC<PlantCanvasProps> = ({
             <span className="w-2.5 h-2.5 rounded-sm bg-rose-500/20 border border-rose-500"></span>
             <span>Alerta Crítica</span>
           </div>
+        </div>
+      </div>
+
+      {/* Theory of Constraints (TOC) & Bottleneck Interactive Operations Strip */}
+      <div className="mb-4 p-3.5 rounded-xl bg-gradient-to-r from-amber-950/40 via-[#18212d] to-[#121822] border border-amber-500/50 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs font-mono">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center shrink-0">
+            <AlertCircle className="w-5 h-5 animate-pulse" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.2 rounded border border-amber-500/30">
+                Restricción Activa (TOC)
+              </span>
+              <span className="text-white font-bold">
+                {processConfig?.bottleneckStation || 'Equipo Cuello de Botella'}
+              </span>
+              {bottleneckState?.replacementProjectExecuted && (
+                <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.2 rounded border border-emerald-500/30">
+                  REEMPLAZO CAPEX EJECUTADO
+                </span>
+              )}
+            </div>
+            <div className="text-[11px] text-zinc-300 mt-0.5">
+              <span>Modo de Cadencia: </span>
+              <strong className="text-amber-300">
+                {bottleneckState?.pacingMode === 'SUBORDINADA_CUELLO_BOTELLA'
+                  ? 'Sincronizada a velocidad de equipo más bajo (Drum-Buffer-Rope)'
+                  : bottleneckState?.pacingMode === 'REORDENAMIENTO_LINEAS'
+                  ? 'Reordenamiento de líneas & Split Flow (-25% carga)'
+                  : 'Máxima velocidad desbalanceada (Push sin sincronización)'}
+              </strong>
+              <span className="text-zinc-500"> · WIP en cola: </span>
+              <strong className={bottleneckState && bottleneckState.wipBufferUnits > 1200 ? 'text-rose-400' : 'text-emerald-400'}>
+                {bottleneckState?.wipBufferUnits.toLocaleString() || '1.850'} u.
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          {onOpenBottleneckModal && (
+            <button
+              onClick={() => { sound.playClick(); onOpenBottleneckModal(); }}
+              className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-bold rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer whitespace-nowrap"
+            >
+              <Zap className="w-3.5 h-3.5 fill-current" />
+              <span>Gestionar Cuello de Botella (TOC)</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -195,7 +259,22 @@ export const PlantCanvas: React.FC<PlantCanvasProps> = ({
                     <div className="w-8 h-8 rounded bg-[#1f2937] border border-blue-500/40 flex items-center justify-center text-blue-400">
                       <Cog className={`w-4 h-4 ${isSimulating ? 'animate-spin' : ''}`} style={{ animationDuration: '6s' }} />
                     </div>
-                    {renderStatusBadge(unit)}
+                    <div className="flex items-center gap-1.5">
+                      {renderStatusBadge(unit)}
+                      {onOpenBottleneckModal && isBottleneck && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            sound.playClick();
+                            onOpenBottleneckModal();
+                          }}
+                          className="px-1.5 py-0.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded text-[9px] font-mono font-bold transition-all cursor-pointer"
+                          title="Gestionar Cuello de Botella (TOC)"
+                        >
+                          TOC
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <h3 className="text-sm font-semibold text-white group-hover:text-blue-400 transition-colors">

@@ -1,6 +1,6 @@
 import React from 'react';
-import { PlantUnit, Character } from '../types/game';
-import { X, MessageSquare, AlertCircle, Wrench, Shield, CheckCircle2 } from 'lucide-react';
+import { PlantUnit, Character, MachineDefinition } from '../types/game';
+import { X, MessageSquare, AlertCircle, Wrench, Shield, CheckCircle2, Layers, GraduationCap, Settings, Cpu, Zap } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 interface UnitModalProps {
@@ -9,6 +9,11 @@ interface UnitModalProps {
   onClose: () => void;
   onToggleTactical: (unitId: PlantUnit['id'], toggleKey: keyof PlantUnit['tacticalToggles']) => void;
   onStartDialogue: (character: Character) => void;
+  onApplyMethodology?: (unitId: PlantUnit['id']) => void;
+  onCreateTraining?: (unitId: PlantUnit['id']) => void;
+  onViewMaintenance?: (unitId: PlantUnit['id']) => void;
+  onOpenBottleneckModal?: () => void;
+  machines?: MachineDefinition[];
 }
 
 export const UnitModal: React.FC<UnitModalProps> = ({
@@ -16,9 +21,16 @@ export const UnitModal: React.FC<UnitModalProps> = ({
   character,
   onClose,
   onToggleTactical,
-  onStartDialogue
+  onStartDialogue,
+  onApplyMethodology,
+  onCreateTraining,
+  onViewMaintenance,
+  onOpenBottleneckModal,
+  machines = []
 }) => {
   if (!unit || !character) return null;
+
+  const unitMachines = machines.filter((m) => m.unitId === unit.id);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-in fade-in duration-150">
@@ -127,6 +139,102 @@ export const UnitModal: React.FC<UnitModalProps> = ({
             </div>
           </div>
 
+          {/* Engineering & Methodology Direct Actions */}
+          <div className="p-4 bg-slate-950/70 rounded-xl border border-slate-800 space-y-2.5">
+            <h3 className="text-xs font-mono uppercase text-slate-400 tracking-wider flex items-center justify-between">
+              <span>Gestión de Ingeniería Aplicada a esta Unidad</span>
+              <span className="text-[10px] text-amber-400 font-mono">Facultad del Gerente</span>
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {onApplyMethodology && (
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    onApplyMethodology(unit.id);
+                  }}
+                  className="p-2.5 bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/30 rounded-lg text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer text-left"
+                >
+                  <Layers className="w-4 h-4 shrink-0 text-amber-400" />
+                  <div>
+                    <strong className="block text-white">Aplicar Metodología</strong>
+                    <span className="text-[10px] text-slate-400">Lean, 5S, TPM, SOP, JI</span>
+                  </div>
+                </button>
+              )}
+
+              {onCreateTraining && (
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    onCreateTraining(unit.id);
+                  }}
+                  className="p-2.5 bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer text-left"
+                >
+                  <GraduationCap className="w-4 h-4 shrink-0 text-emerald-400" />
+                  <div>
+                    <strong className="block text-white">Capacitar Dotación</strong>
+                    <span className="text-[10px] text-slate-400">{unit.activeWorkers} operarios</span>
+                  </div>
+                </button>
+              )}
+
+              {onViewMaintenance && (
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    onViewMaintenance(unit.id);
+                  }}
+                  className="p-2.5 bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/30 rounded-lg text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer text-left"
+                >
+                  <Wrench className="w-4 h-4 shrink-0 text-cyan-400" />
+                  <div>
+                    <strong className="block text-white">Ver Mantenimiento</strong>
+                    <span className="text-[10px] text-slate-400">Activos y confiabilidad</span>
+                  </div>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Specific Station Machinery */}
+          {unitMachines.length > 0 && (
+            <div className="p-4 bg-slate-950/70 rounded-xl border border-slate-800 space-y-2.5">
+              <h3 className="text-xs font-mono uppercase text-slate-400 tracking-wider flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Cpu className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Maquinaria & Activos Físicos Asignados ({unitMachines.length})</span>
+                </span>
+                <span className="text-[10px] text-amber-400/80 font-mono">Específico de este Proceso</span>
+              </h3>
+              <div className="space-y-2">
+                {unitMachines.map((m) => (
+                  <div key={m.id} className="p-2.5 bg-slate-900 rounded-lg border border-slate-800 flex items-center justify-between gap-3 text-xs">
+                    <div className="min-w-0">
+                      <div className="font-semibold text-white flex items-center gap-2 truncate">
+                        <span>{m.name}</span>
+                        {m.status === 'CUELLO_BOTELLA' && (
+                          <span className="text-[9px] font-mono px-1.5 py-0.2 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded">
+                            Restricción TOC
+                          </span>
+                        )}
+                        {m.status === 'EN_ALERTA' && (
+                          <span className="text-[9px] font-mono px-1.5 py-0.2 bg-rose-500/20 text-rose-300 border border-rose-500/40 rounded">
+                            En Alerta
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[11px] text-slate-400 truncate">{m.type}</div>
+                    </div>
+                    <div className="text-right font-mono shrink-0">
+                      <div className="text-[10px] text-slate-400">Desgaste: <strong className={m.wearPercent > 60 ? 'text-rose-400' : 'text-emerald-400'}>{Math.round(m.wearPercent)}%</strong></div>
+                      <div className="text-[10px] text-zinc-500">{m.operatingHours.toLocaleString()}h uso</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Manager Tactical Toggles */}
           <div>
             <h3 className="text-xs font-mono uppercase text-slate-400 tracking-wider mb-2.5">
@@ -230,6 +338,16 @@ export const UnitModal: React.FC<UnitModalProps> = ({
             Dotación: {unit.activeWorkers} operadores activos
           </div>
           <div className="flex items-center gap-3">
+            {onOpenBottleneckModal && unit.id === 'proceso' && (
+              <button
+                onClick={() => { sound.playClick(); onOpenBottleneckModal(); }}
+                className="px-3.5 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 font-bold text-xs rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer"
+                title="Abrir Centro de Control de Cuellos de Botella (TOC)"
+              >
+                <Zap className="w-3.5 h-3.5" />
+                <span>Restricción TOC</span>
+              </button>
+            )}
             <button
               onClick={() => { sound.playClick(); onStartDialogue(character); }}
               className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg flex items-center gap-2 transition-colors shadow-sm"

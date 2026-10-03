@@ -1,1 +1,516 @@
 @import "tailwindcss";
+
+/* ==========================================================================
+   TRANSFORMACIÓN COMPLETA DE PALETAS DE COLOR DE PLANTA INDUSTRIAL
+   Temas: Claro (Sala Limpia), Blueprint (Plano CAD), Ámbar (Terminal CRT), Oscuro (SCADA)
+   ========================================================================== */
+
+/* ==========================================================================
+   1. TEMA CLARO: SALA LIMPIA / LABORATORIO INDUSTRIAL ISO
+   Toda la paleta cambia a superficies blancas, gris pizarra diurno y azul industrial
+   ========================================================================== */
+.theme-light {
+  color-scheme: light;
+}
+
+/* Fondo principal de pantalla y contenedores raíz */
+.theme-light,
+.theme-light .min-h-screen,
+.theme-light [class*="bg-[#0a0d12]"],
+.theme-light [class*="bg-[#090c0f]"],
+.theme-light [class*="bg-[#090c10]"],
+.theme-light [class*="bg-[#080b0f]"],
+.theme-light [class*="bg-[#0c1015]"] {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Superficies principales, tarjetas (PlantCanvas, KPIs, contenedores), modales y diálogos */
+.theme-light [class*="bg-[#12161e]"],
+.theme-light [class*="bg-[#0f1319]"],
+.theme-light [class*="bg-[#0d1117]"],
+.theme-light [class*="bg-[#141a23]"],
+.theme-light [class*="bg-[#141a22]"],
+.theme-light [class*="bg-[#141a24]"],
+.theme-light [class*="bg-[#17202c]"],
+.theme-light [class*="bg-[#18212c]"],
+.theme-light [class*="bg-[#161c26]"],
+.theme-light [class*="bg-[#111722]"],
+.theme-light [class*="bg-[#19222f]"],
+.theme-light [class*="bg-[#121720]"],
+.theme-light [class*="bg-slate-900"],
+.theme-light [class*="bg-zinc-900"] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Subpaneles, estaciones de máquinas, barras de herramientas, listas y tarjetas anidadas */
+.theme-light [class*="bg-[#171e27]"],
+.theme-light [class*="bg-[#181f29]"],
+.theme-light [class*="bg-[#1a222d]"],
+.theme-light [class*="bg-[#151c24]"],
+.theme-light [class*="bg-[#151c26]"],
+.theme-light [class*="bg-[#11161d]"],
+.theme-light [class*="bg-[#1a232f]"],
+.theme-light [class*="bg-[#1f2937]"],
+.theme-light [class*="bg-[#1c2430]"],
+.theme-light [class*="bg-[#1b232e]"],
+.theme-light [class*="bg-[#1a222c]"],
+.theme-light [class*="bg-[#0c1017]"],
+.theme-light [class*="bg-[#0e1218]"],
+.theme-light [class*="bg-[#0e131b]"],
+.theme-light [class*="bg-[#0d1219]"],
+.theme-light [class*="bg-slate-950"],
+.theme-light [class*="bg-zinc-950"] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Ranuras profundas de máquinas, silos, celdas métricas y fondos oscuros residuales */
+.theme-light [class*="bg-[#161c24]"],
+.theme-light [class*="bg-[#202936]"],
+.theme-light [class*="bg-[#141b24]"],
+.theme-light [class*="bg-[#222b38]"],
+.theme-light [class*="bg-[#293546]"],
+.theme-light [class*="bg-[#221c16]"] {
+  background-color: #edf2f7 !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Encabezados, barras superiores y navegación */
+.theme-light header,
+.theme-light [class*="bg-[#10151c]"] {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Modal dialog card container in Claro */
+.theme-light .fixed.inset-0 > div,
+.theme-light [role="dialog"] {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Captura universal de clases de fondos oscuros restantes */
+.theme-light [class*="bg-[#0"],
+.theme-light [class*="bg-[#1"] {
+  background-color: #ffffff !important;
+}
+
+.theme-light [class*="bg-[#11"],
+.theme-light [class*="bg-[#14"],
+.theme-light [class*="bg-[#15"],
+.theme-light [class*="bg-[#16"],
+.theme-light [class*="bg-[#17"],
+.theme-light [class*="bg-[#18"],
+.theme-light [class*="bg-[#1a"],
+.theme-light [class*="bg-[#1b"],
+.theme-light [class*="bg-[#1c"],
+.theme-light [class*="bg-[#1f"],
+.theme-light [class*="bg-[#2"] {
+  background-color: #f8fafc !important;
+}
+
+/* Bordes en Tema Claro */
+.theme-light [class*="border-[#"],
+.theme-light [class*="border-slate-8"],
+.theme-light [class*="border-slate-7"],
+.theme-light [class*="border-zinc-8"],
+.theme-light [class*="border-zinc-7"] {
+  border-color: #cbd5e1 !important;
+}
+
+/* Tipografía de alto contraste en Claro */
+.theme-light [class*="text-zinc-1"],
+.theme-light [class*="text-slate-1"],
+.theme-light [class*="text-white"],
+.theme-light h1,
+.theme-light h2,
+.theme-light h3,
+.theme-light h4 {
+  color: #0f172a !important;
+}
+
+.theme-light [class*="text-zinc-2"],
+.theme-light [class*="text-slate-2"],
+.theme-light [class*="text-zinc-3"],
+.theme-light [class*="text-slate-3"] {
+  color: #1e293b !important;
+}
+
+.theme-light [class*="text-zinc-4"],
+.theme-light [class*="text-slate-4"],
+.theme-light [class*="text-zinc-5"],
+.theme-light [class*="text-slate-5"] {
+  color: #334155 !important;
+}
+
+.theme-light [class*="text-zinc-6"] {
+  color: #64748b !important;
+}
+
+/* Botones secundarios en Claro */
+.theme-light button[class*="bg-[#1"],
+.theme-light button[class*="bg-[#2"] {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.theme-light button[class*="bg-[#1"]:hover,
+.theme-light button[class*="bg-[#2"]:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Inputs y controles */
+.theme-light input,
+.theme-light select,
+.theme-light textarea {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Footer y hovers en Claro */
+.theme-light footer {
+  background-color: #e2e8f0 !important;
+  border-top-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+
+/* ==========================================================================
+   2. TEMA BLUEPRINT: PLANO TÉCNICO CAD DE INGENIERÍA
+   Toda la paleta cambia a planos técnicos azul cobalto con cuadrícula milimétrica
+   ========================================================================== */
+.theme-blueprint {
+  color-scheme: dark;
+}
+
+/* Fondo principal con cuadrícula de plano milimétrico */
+.theme-blueprint,
+.theme-blueprint .min-h-screen,
+.theme-blueprint [class*="bg-[#0a0d12]"],
+.theme-blueprint [class*="bg-[#090c0f]"],
+.theme-blueprint [class*="bg-[#090c10]"],
+.theme-blueprint [class*="bg-[#080b0f]"],
+.theme-blueprint [class*="bg-[#0c1015]"] {
+  background-color: #061325 !important;
+  background-image: 
+    linear-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px) !important;
+  background-size: 24px 24px !important;
+  color: #f0f9ff !important;
+}
+
+/* Superficies principales, tarjetas (PlantCanvas, modales, etc.) */
+.theme-blueprint [class*="bg-[#12161e]"],
+.theme-blueprint [class*="bg-[#0f1319]"],
+.theme-blueprint [class*="bg-[#0d1117]"],
+.theme-blueprint [class*="bg-[#141a23]"],
+.theme-blueprint [class*="bg-[#141a22]"],
+.theme-blueprint [class*="bg-[#141a24]"],
+.theme-blueprint [class*="bg-[#17202c]"],
+.theme-blueprint [class*="bg-[#18212c]"],
+.theme-blueprint [class*="bg-[#161c26]"],
+.theme-blueprint [class*="bg-[#111722]"],
+.theme-blueprint [class*="bg-[#19222f]"],
+.theme-blueprint [class*="bg-[#121720]"],
+.theme-blueprint [class*="bg-slate-900"],
+.theme-blueprint [class*="bg-zinc-900"] {
+  background-color: #0b1e3b !important;
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 4px 24px rgba(6, 19, 37, 0.8) !important;
+}
+
+/* Subpaneles, estaciones de máquinas, barras y listas */
+.theme-blueprint [class*="bg-[#171e27]"],
+.theme-blueprint [class*="bg-[#181f29]"],
+.theme-blueprint [class*="bg-[#1a222d]"],
+.theme-blueprint [class*="bg-[#151c24]"],
+.theme-blueprint [class*="bg-[#151c26]"],
+.theme-blueprint [class*="bg-[#11161d]"],
+.theme-blueprint [class*="bg-[#1a232f]"],
+.theme-blueprint [class*="bg-[#1f2937]"],
+.theme-blueprint [class*="bg-[#1c2430]"],
+.theme-blueprint [class*="bg-[#1b232e]"],
+.theme-blueprint [class*="bg-[#1a222c]"],
+.theme-blueprint [class*="bg-[#0c1017]"],
+.theme-blueprint [class*="bg-[#0e1218]"],
+.theme-blueprint [class*="bg-[#0e131b]"],
+.theme-blueprint [class*="bg-[#0d1219]"],
+.theme-blueprint [class*="bg-slate-950"],
+.theme-blueprint [class*="bg-zinc-950"] {
+  background-color: #0f284f !important;
+  border-color: #2563eb66 !important;
+}
+
+/* Ranuras profundas y celdas métricas */
+.theme-blueprint [class*="bg-[#161c24]"],
+.theme-blueprint [class*="bg-[#202936]"],
+.theme-blueprint [class*="bg-[#141b24]"],
+.theme-blueprint [class*="bg-[#222b38]"],
+.theme-blueprint [class*="bg-[#293546]"],
+.theme-blueprint [class*="bg-[#221c16]"] {
+  background-color: #07172e !important;
+  border-color: #1e40af !important;
+}
+
+/* Encabezados y barras superiores */
+.theme-blueprint header,
+.theme-blueprint [class*="bg-[#10151c]"] {
+  background-color: rgba(11, 30, 59, 0.96) !important;
+  border-color: #1d4ed8 !important;
+}
+
+/* Modales en Blueprint */
+.theme-blueprint .fixed.inset-0 > div,
+.theme-blueprint [role="dialog"] {
+  background-color: #0b1e3b !important;
+  border-color: #38bdf8 !important;
+  color: #f0f9ff !important;
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.25) !important;
+}
+
+/* Captura universal de fondos oscuros restantes */
+.theme-blueprint [class*="bg-[#0"],
+.theme-blueprint [class*="bg-[#1"] {
+  background-color: #0b1e3b !important;
+}
+
+.theme-blueprint [class*="bg-[#11"],
+.theme-blueprint [class*="bg-[#14"],
+.theme-blueprint [class*="bg-[#15"],
+.theme-blueprint [class*="bg-[#16"],
+.theme-blueprint [class*="bg-[#17"],
+.theme-blueprint [class*="bg-[#18"],
+.theme-blueprint [class*="bg-[#1a"],
+.theme-blueprint [class*="bg-[#1b"],
+.theme-blueprint [class*="bg-[#1c"],
+.theme-blueprint [class*="bg-[#1f"],
+.theme-blueprint [class*="bg-[#2"] {
+  background-color: #0f284f !important;
+}
+
+/* Bordes en Blueprint */
+.theme-blueprint [class*="border-[#"],
+.theme-blueprint [class*="border-slate-8"],
+.theme-blueprint [class*="border-slate-7"],
+.theme-blueprint [class*="border-zinc-8"],
+.theme-blueprint [class*="border-zinc-7"] {
+  border-color: #1d4ed877 !important;
+}
+
+/* Tipografía en Blueprint */
+.theme-blueprint [class*="text-zinc-1"],
+.theme-blueprint [class*="text-slate-1"],
+.theme-blueprint [class*="text-white"],
+.theme-blueprint h1,
+.theme-blueprint h2,
+.theme-blueprint h3,
+.theme-blueprint h4 {
+  color: #f0f9ff !important;
+}
+
+.theme-blueprint [class*="text-zinc-2"],
+.theme-blueprint [class*="text-slate-2"],
+.theme-blueprint [class*="text-zinc-3"],
+.theme-blueprint [class*="text-slate-3"],
+.theme-blueprint [class*="text-zinc-4"],
+.theme-blueprint [class*="text-slate-4"] {
+  color: #bae6fd !important;
+}
+
+.theme-blueprint [class*="text-zinc-5"],
+.theme-blueprint [class*="text-slate-5"],
+.theme-blueprint [class*="text-zinc-6"] {
+  color: #60a5fa !important;
+}
+
+.theme-blueprint [class*="text-amber-400"] {
+  color: #38bdf8 !important;
+}
+
+.theme-blueprint footer {
+  background-color: #061325 !important;
+  border-top-color: #1d4ed8 !important;
+  color: #7dd3fc !important;
+}
+
+
+/* ==========================================================================
+   3. TEMA AMBAR: TERMINAL INDUSTRIAL CRT / CONSOLA PLC
+   Toda la paleta cambia a monitor fósforo ámbar cálido con trama de barrido
+   ========================================================================== */
+.theme-amber {
+  color-scheme: dark;
+}
+
+/* Fondo principal con trama de barrido raster */
+.theme-amber,
+.theme-amber .min-h-screen,
+.theme-amber [class*="bg-[#0a0d12]"],
+.theme-amber [class*="bg-[#090c0f]"],
+.theme-amber [class*="bg-[#090c10]"],
+.theme-amber [class*="bg-[#080b0f]"],
+.theme-amber [class*="bg-[#0c1015]"] {
+  background-color: #0d0803 !important;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(245, 158, 11, 0.025) 0px,
+    rgba(245, 158, 11, 0.025) 1px,
+    transparent 1px,
+    transparent 2px
+  ) !important;
+  color: #fef3c7 !important;
+}
+
+/* Superficies principales, tarjetas (PlantCanvas, modales, etc.) */
+.theme-amber [class*="bg-[#12161e]"],
+.theme-amber [class*="bg-[#0f1319]"],
+.theme-amber [class*="bg-[#0d1117]"],
+.theme-amber [class*="bg-[#141a23]"],
+.theme-amber [class*="bg-[#141a22]"],
+.theme-amber [class*="bg-[#141a24]"],
+.theme-amber [class*="bg-[#17202c]"],
+.theme-amber [class*="bg-[#18212c]"],
+.theme-amber [class*="bg-[#161c26]"],
+.theme-amber [class*="bg-[#111722]"],
+.theme-amber [class*="bg-[#19222f]"],
+.theme-amber [class*="bg-[#121720]"],
+.theme-amber [class*="bg-slate-900"],
+.theme-amber [class*="bg-zinc-900"] {
+  background-color: #191006 !important;
+  border-color: #78350f !important;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.08), inset 0 0 15px rgba(245, 158, 11, 0.03) !important;
+}
+
+/* Subpaneles, estaciones de máquinas, barras y listas */
+.theme-amber [class*="bg-[#171e27]"],
+.theme-amber [class*="bg-[#181f29]"],
+.theme-amber [class*="bg-[#1a222d]"],
+.theme-amber [class*="bg-[#151c24]"],
+.theme-amber [class*="bg-[#151c26]"],
+.theme-amber [class*="bg-[#11161d]"],
+.theme-amber [class*="bg-[#1a232f]"],
+.theme-amber [class*="bg-[#1f2937]"],
+.theme-amber [class*="bg-[#1c2430]"],
+.theme-amber [class*="bg-[#1b232e]"],
+.theme-amber [class*="bg-[#1a222c]"],
+.theme-amber [class*="bg-[#0c1017]"],
+.theme-amber [class*="bg-[#0e1218]"],
+.theme-amber [class*="bg-[#0e131b]"],
+.theme-amber [class*="bg-[#0d1219]"],
+.theme-amber [class*="bg-slate-950"],
+.theme-amber [class*="bg-zinc-950"] {
+  background-color: #241709 !important;
+  border-color: #92400e !important;
+}
+
+/* Ranuras profundas y celdas métricas */
+.theme-amber [class*="bg-[#161c24]"],
+.theme-amber [class*="bg-[#202936]"],
+.theme-amber [class*="bg-[#141b24]"],
+.theme-amber [class*="bg-[#222b38]"],
+.theme-amber [class*="bg-[#293546]"],
+.theme-amber [class*="bg-[#221c16]"] {
+  background-color: #120b04 !important;
+  border-color: #78350f !important;
+}
+
+/* Encabezados y barras superiores */
+.theme-amber header,
+.theme-amber [class*="bg-[#10151c]"] {
+  background-color: rgba(25, 16, 6, 0.96) !important;
+  border-color: #78350f !important;
+}
+
+/* Modales en Ámbar */
+.theme-amber .fixed.inset-0 > div,
+.theme-amber [role="dialog"] {
+  background-color: #191006 !important;
+  border-color: #f59e0b !important;
+  color: #fef3c7 !important;
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.25) !important;
+}
+
+/* Captura universal de fondos oscuros restantes */
+.theme-amber [class*="bg-[#0"],
+.theme-amber [class*="bg-[#1"] {
+  background-color: #191006 !important;
+}
+
+.theme-amber [class*="bg-[#11"],
+.theme-amber [class*="bg-[#14"],
+.theme-amber [class*="bg-[#15"],
+.theme-amber [class*="bg-[#16"],
+.theme-amber [class*="bg-[#17"],
+.theme-amber [class*="bg-[#18"],
+.theme-amber [class*="bg-[#1a"],
+.theme-amber [class*="bg-[#1b"],
+.theme-amber [class*="bg-[#1c"],
+.theme-amber [class*="bg-[#1f"],
+.theme-amber [class*="bg-[#2"] {
+  background-color: #241709 !important;
+}
+
+/* Bordes en Ámbar */
+.theme-amber [class*="border-[#"],
+.theme-amber [class*="border-slate-8"],
+.theme-amber [class*="border-slate-7"],
+.theme-amber [class*="border-zinc-8"],
+.theme-amber [class*="border-zinc-7"] {
+  border-color: #78350f !important;
+}
+
+/* Tipografía fosforescente en Ámbar */
+.theme-amber [class*="text-zinc-1"],
+.theme-amber [class*="text-slate-1"],
+.theme-amber [class*="text-white"],
+.theme-amber h1,
+.theme-amber h2,
+.theme-amber h3,
+.theme-amber h4 {
+  color: #fef3c7 !important;
+  text-shadow: 0 0 6px rgba(251, 191, 36, 0.35);
+}
+
+.theme-amber [class*="text-zinc-2"],
+.theme-amber [class*="text-slate-2"],
+.theme-amber [class*="text-zinc-3"],
+.theme-amber [class*="text-slate-3"] {
+  color: #fde68a !important;
+}
+
+.theme-amber [class*="text-zinc-4"],
+.theme-amber [class*="text-slate-4"],
+.theme-amber [class*="text-zinc-5"],
+.theme-amber [class*="text-slate-5"] {
+  color: #d97706 !important;
+}
+
+.theme-amber [class*="text-zinc-6"] {
+  color: #b45309 !important;
+}
+
+.theme-amber [class*="text-amber-400"] {
+  color: #fbbf24 !important;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.theme-amber footer {
+  background-color: #0d0803 !important;
+  border-top-color: #78350f !important;
+  color: #d97706 !important;
+}
+
+
+/* ==========================================================================
+   4. TEMA OSCURO SCADA (DEFAULT)
+   ========================================================================== */
+.theme-dark {
+  color-scheme: dark;
+}

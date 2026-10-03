@@ -1,4 +1,55 @@
-// Types for Industrial Civil Engineer Plant Operations RPG
+// Types for Industrial Engineer Plant Operations RPG
+
+export type VisualTheme = 'dark' | 'light' | 'blueprint' | 'amber';
+
+export interface ThemeOption {
+  id: VisualTheme;
+  name: string;
+  tagline: string;
+  accent: string;
+  badge: string;
+}
+
+// ==========================================
+// ROLES OPERATIVOS SELECCIONABLES DE PLANTA
+// ==========================================
+export type PlantRoleId =
+  | 'GERENTE_PLANTA'
+  | 'JEFE_PRODUCCION'
+  | 'JEFE_CALIDAD'
+  | 'JEFE_MANTENIMIENTO'
+  | 'JEFE_ABASTECIMIENTO'
+  | 'JEFE_DESPACHO';
+
+export interface RolePrimaryKpi {
+  label: string;
+  key: string;
+  unit: string;
+  targetDesc: string;
+}
+
+export interface RoleTacticalAction {
+  id: string;
+  label: string;
+  description: string;
+  cost: number;
+  cooldownHours?: number;
+}
+
+export interface RoleDefinition {
+  id: PlantRoleId;
+  name: string;
+  department: string;
+  characterName: string;
+  avatarInitials: string;
+  avatarColor: string;
+  tagline: string;
+  mission: string;
+  primaryKpis: RolePrimaryKpi[];
+  dilemmaPressure: string;
+  crossImpactWarning: string;
+  tacticalActions: RoleTacticalAction[];
+}
 
 export type UnitId =
   | 'recepcion'
@@ -75,6 +126,7 @@ export interface DilemmaChoice {
   id: string;
   text: string;
   methodologyNote: string; // Engineering rationale e.g. "Aplicar Teoría de Restricciones (TOC)"
+  npcOpinions?: Partial<Record<string, string>>; // Opinions from characters when consulted: characterId -> opinion
   consequences: {
     cashChange: number; // +/- dinero en caja ($)
     moraleChanges?: Partial<Record<UnitId, number>>;
@@ -85,6 +137,8 @@ export interface DilemmaChoice {
       qualityRate?: number;
       otif?: number;
       defects?: number;
+      scrapPpm?: number;
+      customerNps?: number;
       inventory?: number;
       safety?: number;
       leadTimeHours?: number;
@@ -96,8 +150,9 @@ export interface DilemmaChoice {
 
 export interface Dilemma {
   id: string;
-  dayTrigger: number; // Day on which this occurs or trigger condition
+  dayTrigger?: number; // Optional day trigger
   hourTrigger?: number; // 8 - 18
+  processTypeId?: ProcessTypeId | 'ALL'; // Specific process or ALL
   unitId: UnitId;
   characterId: string;
   title: string;
@@ -150,10 +205,32 @@ export interface EngineerProfile {
 export interface DayLogEntry {
   day: number;
   hour: number;
-  type: 'DILEMMA' | 'TACTICAL' | 'INCIDENT' | 'ACHIEVEMENT';
+  type: 'DILEMMA' | 'TACTICAL' | 'INCIDENT' | 'ACHIEVEMENT' | 'METHODOLOGY' | 'MAINTENANCE' | 'TRAINING' | 'TOC_BOTTLENECK';
   title: string;
   description: string;
   impact: string;
+}
+
+// ==========================================
+// TEORÍA DE RESTRICCIONES (TOC) & CUELLOS DE BOTELLA
+// ==========================================
+
+export type LinePacingMode = 
+  | 'MAXIMA_VELOCIDAD' 
+  | 'SUBORDINADA_CUELLO_BOTELLA' 
+  | 'REORDENAMIENTO_LINEAS';
+
+export interface BottleneckTOCState {
+  pacingMode: LinePacingMode;
+  targetMachineId: string;
+  targetMachineName: string;
+  nominalBottleneckCapacity: number; // u/h del equipo restrictivo
+  effectiveLineCadence: number; // u/h reales sincronizadas
+  improvementsAppliedCount: number;
+  replacementProjectExecuted: boolean;
+  dailyOperationalCostIncurred: number;
+  wipBufferUnits: number;
+  lineRebalanced: boolean;
 }
 
 export interface DayReport {
@@ -182,3 +259,140 @@ export interface CaseStudy {
   targetObjective: string;
   initialIndicators: Partial<PlantIndicators>;
 }
+
+// ==========================================
+// METODOLOGÍAS Y HERRAMIENTAS INDUSTRIALES
+// ==========================================
+
+export type MethodologyId =
+  | '5S'
+  | 'TPM'
+  | 'JIT'
+  | 'LEAN'
+  | 'SOP'
+  | 'JI'
+  | 'SMED'
+  | 'KAIZEN'
+  | 'KANBAN'
+  | 'POKA_YOKE'
+  | 'SIX_SIGMA'
+  | 'VSM';
+
+export type MethodologyScope = 'PLANT' | 'UNIT' | 'MACHINE';
+
+export interface MethodologyDefinition {
+  id: MethodologyId;
+  name: string;
+  tagline: string;
+  origin: string; // Fundamento histórico / creadores
+  category: 'Estandarización & Calidad' | 'Mantenimiento & Confiabilidad' | 'Flujo & Cuellos de Botella' | 'Productividad & Personas';
+  definition: string;
+  industrialUses: string[];
+  prerequisites: string;
+  color: string;
+}
+
+export type ImplementationStatus = 'INICIANDO' | 'CURVA_APRENDIZAJE' | 'EN_MADURACION' | 'ESTABILIZADA';
+
+export interface ActiveImplementation {
+  id: string;
+  methodologyId: MethodologyId;
+  scopeType: MethodologyScope;
+  targetId: string; // 'all' | UnitId | MachineId
+  targetName: string;
+  implementedDay: number;
+  implementedHour: number;
+  cyclesActive: number; // Horas / ciclos de simulación acumulados
+  status: ImplementationStatus;
+  statusNote: string;
+}
+
+// ==========================================
+// MAQUINARIA Y ACTIVOS CRÍTICOS DE PLANTA
+// ==========================================
+
+export interface MachineDefinition {
+  id: string;
+  name: string;
+  unitId: UnitId;
+  unitName: string;
+  type: string;
+  criticality: 'CRITICA' | 'ALTA' | 'MEDIA';
+  wearPercent: number; // 0 - 100% de desgaste acumulado
+  operatingHours: number;
+  status: MachineStatus;
+  lastMaintenanceDay: number;
+  nextScheduledDay: number;
+  installedSensors: boolean;
+  sparePartsAvailable: boolean;
+  description: string;
+  nominalCapacity: string;
+}
+
+// ==========================================
+// PLANES DE CAPACITACIÓN LABORAL
+// ==========================================
+
+export type TrainingProgramId =
+  | 'JI_WORK_INSTRUCTION'
+  | 'SAFETY_LOTO'
+  | 'AUTONOMOUS_MAINTENANCE_L1'
+  | 'SPC_METROLOGY'
+  | 'LEAN_5S_VISUAL'
+  | 'MUDA_KAIZEN'
+  | 'FORKLIFT_LOGISTICS'
+  | 'SMED_SETUP';
+
+export interface TrainingProgramDefinition {
+  id: TrainingProgramId;
+  title: string;
+  shortDesc: string;
+  recommendedAudience: string;
+  competencyTarget: string;
+  durationHours: number;
+  costPerWorker: number;
+  syllabus: string[];
+}
+
+export interface ActiveTrainingPlan {
+  id: string;
+  programId: TrainingProgramId;
+  title: string;
+  targetAudience: string;
+  unitId?: UnitId;
+  workersCount: number;
+  totalCost: number;
+  progressHours: number;
+  totalHours: number;
+  status: 'EN_CURSO' | 'COMPLETADO';
+  dayStarted: number;
+  hourStarted: number;
+}
+
+// ==========================================
+// GESTIÓN Y PLAN DE MANTENIMIENTO
+// ==========================================
+
+export type MaintenanceStrategy =
+  | 'REACTIVO'
+  | 'PREVENTIVO_SISTEMATICO'
+  | 'PREDICTIVO_CONDICION'
+  | 'RCM_CONFIABILIDAD'
+  | 'TPM_AUTONOMO';
+
+export interface MaintenancePlanState {
+  strategy: MaintenanceStrategy;
+  strategyName: string;
+  strategyDescription: string;
+  inspectionFrequencyDays: number; // 7, 14, 30
+  sparePartsPolicy: 'STOCK_PAÑOL' | 'JUST_IN_TIME';
+  autonomousMaintenanceActive: boolean;
+  predictiveSensorsActive: boolean;
+  compliancePercent: number; // % cumplimiento preventivo
+  mtbfHours: number; // Mean Time Between Failures
+  mttrHours: number; // Mean Time To Repair
+  sparePartsStockCount: number; // Unidades de repuestos en bodega
+  criticalAssetsHealthAverage: number;
+  activeWorkOrdersCount: number;
+}
+
