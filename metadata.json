@@ -1,0 +1,6 @@
+{
+  "name": "Planta Industrial: El Rol del Ingeniero",
+  "description": "Simulador y juego de rol gerencial donde interpretas a un Ingeniero Industrial a cargo de una planta productiva, gestionando áreas, indicadores y reuniones operativas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
